@@ -1,5 +1,5 @@
 /*
- * hmc6352.h
+ * hmc6352.cpp
  * 
  * Copyright (c) 2009 Ruben Laguna <ruben.laguna at gmail.com>. All rights reserved.
  * 
@@ -17,20 +17,54 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef hmc6352_h
-#define hmc6352_h
+#include "Arduino.h"
+#include "hmc6352.h"
+#include <Wire.h>
 
-class Hmc6352
+Hmc6352::Hmc6352()
 {
-  public:
-    Hmc6352();
-    float getHeading();
-    void wake();
-    void sleep();
-  private:
-    
+  Wire.begin();
+}
+
+
+float Hmc6352::getHeading()
+{
+  byte val = 0;
+  byte data[2];
+  int  j, frac;
+
+  Wire.beginTransmission(0x21);
+  Wire.write(0x41); //A
+  Wire.endTransmission();
+  delay(6);
+
+  Wire.requestFrom(0x21, 2);
+  j = 0;
+  while(Wire.available())
+  {
+    char c = Wire.read();
+    data[j] = c;
+    j++;
+  }
+  frac = data[0]*256 + data[1];
   
-};
+  return (frac/10.0);
+}
 
 
-#endif
+void Hmc6352::wake()
+{
+  Wire.beginTransmission(0x21);
+  Wire.write(0x57); //W wake up exit sleep mode
+  Wire.endTransmission();
+  
+}
+
+void Hmc6352::sleep()
+{
+  Wire.beginTransmission(0x21);
+  Wire.write(0x53); //S enter sleep mode
+  Wire.endTransmission();
+  
+}
+

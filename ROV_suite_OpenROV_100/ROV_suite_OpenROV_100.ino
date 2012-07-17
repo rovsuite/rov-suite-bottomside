@@ -2,12 +2,13 @@
 #include <Ethernet.h>
 #include <EthernetUdp.h>
 #include <Servo.h>
+#include <Wire.h>
 #include <Phidgets1135.h>	//voltage sensor
 #include <P1115.h>	//depth sensor
 #include <hmc6352.h>	//heading sensor (compass)
 
-#DEFINE VOLTAGEPIN A1
-#DEFINE DEPTHPIN A2
+#define VOLTAGEPIN A1
+#define DEPTHPIN A2
 
 float versionNumber = 1.10;  //keep the version number here
 const int numberMotors = 3;
@@ -49,7 +50,7 @@ Phidgets1135 voltageSensor(VOLTAGEPIN);	//Default to analog pin 1
 P1115 depthSensor(DEPTHPIN);	//default to analog pin 2
 
 //Create HMC6352 Compass object
-Hmc6352 headingSensor();
+Hmc6352 headingSensor;
 
 void setup()
 {
