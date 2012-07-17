@@ -2,9 +2,14 @@
 #include <Ethernet.h>
 #include <EthernetUdp.h>
 #include <Servo.h>
+#include <Phidgets1135.h>	//voltage sensor
+#include <P1115.h>	//depth sensor
+#include <hmc6352.h>	//heading sensor (compass)
 
+#DEFINE VOLTAGEPIN A1
+#DEFINE DEPTHPIN A2
 
-float versionNumber = 1.00;  //keep the version number here
+float versionNumber = 1.10;  //keep the version number here
 const int numberMotors = 3;
 const int numberRelays = 3;
 const int numberServos = 2;
@@ -34,8 +39,17 @@ char packetBuffer[100];  //100 bytes to hold the incoming packet
 char replyBuffer[100];  //100 bytes to hold the packet to send
 char tempBuffer[50];
 
-//Create UDP objectmotorVal
+//Create UDP object
 EthernetUDP Udp;
+
+//Create a Phidgets P1135 Voltage sensor object
+Phidgets1135 voltageSensor(VOLTAGEPIN);	//Default to analog pin 1
+
+//Create a Phidgets P1115 Pressure sensor object
+P1115 depthSensor(DEPTHPIN);	//default to analog pin 2
+
+//Create HMC6352 Compass object
+Hmc6352 headingSensor();
 
 void setup()
 {
@@ -43,7 +57,7 @@ void setup()
   Udp.begin(localPort);
   
   setupPins();  //call this function to setup the motors, relays and servos
-  
+  depthSensor.zeroSensor();	//zero the depth sensor while the ROV is out of the water
 }
 
 void loop()
@@ -96,11 +110,11 @@ void outputCommands()
 //Read the sensors and send the values up to the tospide
 void readSensors()
 {
-  float depth = 1.2;
-  float heading = 60.5;
-  float voltage = 11.7;
-  float sensor0 = 9.0;
-  float sensor1 = 6.3;
+  float depth = depthSensor.getDepthMeters();
+  float heading = headingSensor.getHeading();
+  float voltage = voltageSensor.getValue();
+  float sensor0 = 0.0;	//fill in your own sensors here
+  float sensor1 = 0.3;	//fill in your own sensors here
   
   dtostrf(versionNumber, 2,2, tempBuffer);
   strcat(replyBuffer, tempBuffer);
@@ -131,7 +145,6 @@ void readSensors()
   Udp.endPacket();
 }
 
-
 //Setup the pins at the start of the program.
 void setupPins()
 {
@@ -160,5 +173,4 @@ void setupPins()
     motorVal[i] = 1500;  //set the motors neutral
     motors[i].attach(motorPins[i]);  //finish initialzing the motors
   }
-  
 }
