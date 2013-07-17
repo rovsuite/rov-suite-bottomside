@@ -1,4 +1,4 @@
-These scripts setup and run software on your Raspberry Pi that help it operate an ROV.
+These scripts setup and run software on your Raspberry Pi running Raspbian that help it operate an ROV.
 They are meant to be used in conjunction with ROV-Suite (github.com/chriskonstad/monterey).
 Written by Chris Konstad <chriskon149@gmail.com> (7/16/2013)
 
