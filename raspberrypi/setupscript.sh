@@ -13,7 +13,7 @@ echo -e "${COLOR}Distro is: $distro${NC}"
 if [ $distro="debian" ]; then
 	echo -e "${COLOR}Downloading and installing packages...${NC}"
 	sudo apt-get update
-	sudo apt-get -y install avrdude htop sendip subversion libjpeg8-dev imagemagick socat
+	sudo apt-get -y install avrdude htop sendip subversion libjpeg8-dev imagemagick socat sysstat
 else
 	#add code to install everything for pacman
 	echo -e "${COLOR}Arch code not complete!${NC}"
@@ -47,6 +47,14 @@ chmod +x bin/measuretemp.sh
 #Uptime script
 mv uptime.sh bin/uptime.sh
 chmod +x bin/uptime.sh
+
+#UsedMemory script
+mv usedmem.sh bin/usedmem.sh
+chmod +x bin/usedmem.sh
+
+#UsedCPU script
+mv usedcpu.sh bin/usedcpu.sh
+chmod +x bin/usedcpu.sh
 
 #SendUDP script
 mv sendudp.sh bin/sendudp.sh
