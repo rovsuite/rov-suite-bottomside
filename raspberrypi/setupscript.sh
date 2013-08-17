@@ -56,6 +56,10 @@ chmod +x bin/usedmem.sh
 mv usedcpu.sh bin/usedcpu.sh
 chmod +x bin/usedcpu.sh
 
+#PacketBuilder script
+mv packetbuilder.sh bin/packetbuilder.sh
+chmod +x bin/packetbuilder.sh
+
 #SendUDP script
 mv sendudp.sh bin/sendudp.sh
 chmod +x bin/sendudp.sh
